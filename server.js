@@ -16,7 +16,11 @@ try {
     console.log(error);
 }
 }
-
+async function readFileWithDelay(){
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    let products = await readFile();
+    return products;
+}
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
