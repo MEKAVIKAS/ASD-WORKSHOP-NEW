@@ -32,7 +32,7 @@ app.get('/products/:id', async (req, res) => {
             return res.json(value);
         
    let products = await  readFileWithDelay();
-   
+
    let {id} = req.params;
    id = Number(id);
    let product = products.find(p => p.id === id);
