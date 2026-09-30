@@ -7,6 +7,17 @@ const port = 3000
 
 const PathToFile = path.join(__dirname, 'db.json');
 
+
+async function readFile() {
+try {
+  let  data = await fs.readFile(PathToFile, 'utf-8');
+  return JSON.parse(data);
+} catch (error) {
+    console.log(error);
+}
+}
+
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
