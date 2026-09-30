@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs').promises;
 const path = require('path');
-
+const { cache } = require('react');
 const app = express()
 const port = 3000
 
@@ -16,15 +16,39 @@ try {
     console.log(error);
 }
 }
+
 async function readFileWithDelay(){
     await new Promise(resolve => setTimeout(resolve, 1500));
     let products = await readFile();
     return products;
 }
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+
+app.get('/products/:id', async (req, res) => {
+    try {
+        let key = req.url;
+        let value=cache[key];
+        if(value)
+            return res.json(value);
+        
+   let products = await  readFileWithDelay();
+   
+   let {id} = req.params;
+   id = Number(id);
+   let product = products.find(p => p.id === id);
+   if (!product) {
+       return res.status(404).send('Product not found');
+   }
+   console.log(product);
+  res.json(product)
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+//products
+//key = /products
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
